@@ -1,0 +1,12 @@
+.search-box {
+    max-width: 50%;
+}
+
+.task-card-header {
+    background-color: #F6F6F6;
+    padding-bottom: 1em;
+}
+
+.new-modal-box {
+    margin-top: 8em;
+}

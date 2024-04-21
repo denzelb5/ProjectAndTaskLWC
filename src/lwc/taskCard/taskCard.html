@@ -1,0 +1,71 @@
+<template>
+    <div class="task-card">
+        <article class="slds-card project-card-header">
+            <div class="slds-card__header slds-grid task-box-header">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                                            <span class="slds-icon_container slds-icon-standard-account"
+                                                  title="Project Information">
+                                            <lightning-icon icon-name="standard:account"></lightning-icon>
+                                            <span class="slds-assistive-text">Task Information for {task.Name}</span>
+                                            </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title ">
+                            <div class="task-title-header">
+                                <span>Task Information for {task.Name}</span>
+                            </div>
+                        </h2>
+                    </div>
+
+                </header>
+            </div>
+
+            <!---------------------- End of Header------------------------------------>
+
+            <!------------------ Task Info ---------------------------------------->
+            <div class="task-info-card">
+
+                <div class="slds-grid detail-box">
+                    <div class="slds-col slds-size_1-of-2 left-col">
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                            <label class="slds-form-element__label label-class"
+                                   for="record-name">Name</label>
+                            <div class="slds-col slds-size_1-of-2 detail-class">{task.Name}</div>
+                        </div>
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                            <label class="slds-form-element__label label-class"
+                                   for="record-name">Description</label>
+                            <div class="slds-col slds-size_1-of-2 detail-class">{task.Description__c}</div>
+                        </div>
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                            <label class="slds-form-element__label label-class"
+                                   for="record-name">Due Date</label>
+                            <div class="slds-col slds-size_1-of-2 detail-class">{task.DueDate__c}</div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 right-col">
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                            <label class="slds-form-element__label label-class"
+                                   for="record-name">Project</label>
+                            <div class="slds-col slds-size_1-of-2 detail-class">{projectName}</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form_horizontal slds-form slds-grid">
+                                <label class="slds-form-element__label label-class"
+                                       for="record-name">Status</label>
+                                <div class="slds-col slds-size_1-of-2 detail-class status-class">{task.Status__c}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+    </div>
+    <template if:true={error}>
+        <c-error-panel errors={error}></c-error-panel>
+    </template>
+</template>

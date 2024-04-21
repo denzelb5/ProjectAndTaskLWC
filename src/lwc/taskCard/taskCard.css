@@ -1,0 +1,35 @@
+/**
+ * Created by Denise.Baker on 4/13/24.
+ */
+.label-class {
+    padding: 5px 0 5px 5px;
+    min-width: 10em;
+}
+
+.detail-box {
+    padding-bottom: 2em;
+}
+
+.detail-class {
+    padding: 5px 0 5px 0px;
+    margin-left: 0;
+}
+
+.status-class {
+    margin-right: -1em;
+}
+
+.left-col {
+    padding-left: 1em;
+}
+
+.task-box-header {
+    background-color: #F6F6F6;
+    padding-bottom: 1em;
+}
+
+
+.task-title-header {
+    font-weight: bold;
+    background-color: #F6F6F6;
+}

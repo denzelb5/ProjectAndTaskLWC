@@ -1,0 +1,171 @@
+<!--
+ - Created by Denise.Baker on 4/13/24.
+ -->
+
+<!-- Project List Lwc -->
+<template>
+    <!---------- Project List Card------------------------->
+
+
+            <template if:false={projectListClosed}>
+                <!--                <lightning-card-->
+                <!--                        title="Project Search"-->
+                <!--                        icon-name="standard:search"-->
+                <!--                        class="slds&#45;&#45;around_medium"-->
+                <!--                >-->
+                <article class="slds-card ">
+                    <div class="slds-card__header slds-grid proj-card-header">
+
+                        <header class="slds-th slds-media slds-media_center slds-has-flexi-truncate" >
+                            <div class="slds-media__figure">
+                                            <span class="slds-icon_container slds-icon-standard-account"
+                                                    title="All Projects">
+                                                <lightning-icon icon-name="standard:work_type_group"></lightning-icon>
+                                            <span class="slds-assistive-text">All Projects</span>
+                                            </span>
+                            </div>
+
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title ">
+                                    <div class="mailing-header">
+                                        <span>All Projects</span>
+                                    </div>
+                                </h2>
+                            </div>
+                            <div class="slds-grid_align-end new-button">
+                                <lightning-button variant="neutral" label="New" title="Primary action"
+                                                  onclick={handleNewModal}
+                                                  class="slds-grid_align-end ">
+                                </lightning-button>
+                            </div>
+
+                        </header>
+                    </div>
+                    <div class="slds-box slds-theme_default">
+                        <lightning-input
+                                label="Search Term"
+                                variant="label-hidden"
+                                placeholder="Search"
+                                type="search"
+                                value={searchKey}
+                                onchange={handleSearch}
+                                class="search-box"
+                        >
+                        </lightning-input>
+                    </div>
+                    <div class="slds-m-around_small">
+                        <lightning-datatable
+                                key-field="id"
+                                data={filteredProjects}
+                                columns={cols}
+                                onrowaction={handleRowAction}
+                                sorted-by={sortBy}
+                                sorted-direction={sortDirection}
+                                onsort={doSorting}
+                                hide-checkbox-column="true"
+                        >
+                        </lightning-datatable>
+                    </div>
+                    <!--        <template if:true={error}>-->
+                    <!--            <c-error-panel errors={error}></c-error-panel>-->
+                    <!--        </template>-->
+                    <!--                </lightning-card>-->
+                </article>
+            </template>
+
+
+    <!---------- Single Project Card------------------------->
+    <template if:true={viewSingleProject}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container new-modal-box">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeDetailModal}>
+                        <lightning-icon icon-name="utility:close"
+                                        alternative-text="close"
+                                        variant="inverse"
+                                        size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_xx-small" id="modal-content-id-5">
+                    <c-project-card record-id={projectId} handle-previous={viewProjectList}></c-project-card>
+                </div>
+
+            </div>
+        </section>
+
+
+
+    </template>
+
+    <!---------- Error Handler ------------------------->
+    <template if:true={error}>
+        <c-error-panel errors={error}></c-error-panel>
+    </template>
+
+    <!---------------- New Project Modal --------------------------->
+    <div class="new-modal-box">
+        <template if:true={isModalOpen}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container new-modal-box">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close" onclick={closeNewModal}>
+                            <lightning-icon icon-name="utility:close"
+                                            alternative-text="close"
+                                            variant="inverse"
+                                            size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_xx-small" id="modal-content-id-1">
+                        <c-create-project-card is-modal-open={closeNewModal}></c-create-project-card>
+                    </div>
+
+                </div>
+            </section>
+        </template>
+    </div>
+
+
+    <!---------------- Update Project Modal --------------------------->
+    <div class="new-modal-box">
+        <template if:true={editModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container new-modal-box">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeEditModal}>
+                        <lightning-icon icon-name="utility:close"
+                                        alternative-text="close"
+                                        variant="inverse"
+                                        size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_xx-small" id="edit-modal-content-id-1">
+                    <c-update-project-card record-id={projectId} edit-modal-open= {closeEditModal}></c-update-project-card>
+                </div>
+
+            </div>
+        </section>
+    </template>
+    </div>
+
+</template>

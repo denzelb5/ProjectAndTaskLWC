@@ -1,0 +1,28 @@
+/**
+ * Created by Denise.Baker on 4/13/24.
+ */
+
+.new-button {
+    text-align: end;
+}
+
+.left-col {
+     padding: 2em 2em 2em 2em;
+ }
+
+.right-col {
+    padding: 2em 2em 2em 2em;
+}
+
+.proj-card-header {
+    background-color: #F6F6F6;
+    padding-bottom: 1em;
+}
+
+.new-modal-box {
+    margin-top: 8em;
+}
+
+.search-box {
+    max-width: 50%;
+}

@@ -1,0 +1,33 @@
+<!--
+ - Created by Denise.Baker on 4/13/24.
+ -->
+
+<!-- Project And Task Page Lwc -->
+<template>
+    <div class="slds-grid">
+        <!--------------------- Project List Card ------------------------------->
+        <div class="slds-col slds-size_1-of-2 left-col">
+            <template if:false={projectListClosed}>
+                <c-project-list-l-w-c
+                        onopennewmodal={handleNewProjectModal}
+                        onclosenewmodal={handleNewProjectModal}
+                        onclosedetailmodal={handleNewProjectModal}>
+
+                </c-project-list-l-w-c>
+            </template>
+        </div>
+
+
+        <div class="slds-col slds-size_1-of-2 right-col">
+            <template if:false={taskListClosed}>
+                <c-task-list
+                        onopennewmodal={handleNewTaskModal}
+                        onclosenewmodal={handleNewTaskModal}
+                        onclosedetailmodal={handleNewTaskModal}>
+
+                </c-task-list>
+            </template>
+        </div>
+
+    </div>
+</template>

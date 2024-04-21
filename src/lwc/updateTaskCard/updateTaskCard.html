@@ -1,0 +1,98 @@
+<!--
+ - Created by Denise.Baker on 4/20/24.
+ -->
+
+<!-- Update Task Card -->
+<!--
+ - Created by Denise.Baker on 4/18/24.
+ -->
+
+<!-- Create Task Card -->
+<template>
+
+
+    <article class="slds-card create-card-header">
+        <div class="slds-card__header slds-grid create-box-header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                                                <span class="slds-icon_container slds-icon-standard-account"
+                                                      title="New Task">
+                                                    <lightning-icon
+                                                            icon-name="standard:work_step"></lightning-icon>
+                                                <span class="slds-assistive-text">New Task</span>
+                                                </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title ">
+                        <div class="create-project-header">
+                            <span>Update {task.Name}</span>
+                        </div>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning-button variant="neutral" label="Submit" onclick={handleSuccess}></lightning-button>
+                </div>
+            </header>
+        </div>
+        <!--- End of Header / Insert Code here ------>
+
+        <div class="card-background">
+
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 left-col">
+                    <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                        <lightning-input type="text" label="Name" required="true" value={task.Name}
+                                         onchange={handleName} variant="label-stacked">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                        <lightning-input type="text" label="Description" required="false" value={task.Description__c}
+                                         onchange={handleDescription} variant="label-stacked">
+                            value={task.Description__c}
+                        </lightning-input>
+                    </div>
+                    <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                        <template if:true={statusValues}>
+                            <lightning-combobox name="progress" label="Status"
+                                                options={statusValues} onchange={handleStatus}
+                                                value={task.Status__c}
+                                                required="false">
+                            </lightning-combobox>
+                        </template>
+                    </div>
+
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 ">
+                    <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+
+                        <label class="slds-form-element__label label-class"
+                               for="record-name">Project
+                        </label>
+                        <div class="lookup-box">
+                            <c-custom-lookup name="project"
+                                             item={projectId}
+                                             id="id"
+                                             obj-name="Project__c"
+                                             class="datatableCell"
+                                             search-placeholder="Search Projects"
+                                             hide-icon={hideIcon}
+                                             word-wrap={wordWrap}
+                                             onlookupselected={handleProject}>
+                            </c-custom-lookup>
+                        </div>
+                    </div>
+                    <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                        <lightning-input type="date" label="Due Date" required="false" value={task.DueDate__c}
+                                         onchange={handleDueDate} variant="label-stacked">
+                        </lightning-input>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </article>
+</template>

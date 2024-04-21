@@ -1,0 +1,72 @@
+<!--
+ - Created by Denise.Baker on 4/14/24.
+ -->
+
+<!-- Update Project Card -->
+<template>
+    <article class="slds-card edit-card-header">
+        <div class="slds-card__header slds-grid edit-box-header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                                                <span class="slds-icon_container slds-icon-standard-account"
+                                                      title="Update Project">
+                                                    <lightning-icon
+                                                            icon-name="standard:work_plan"></lightning-icon>
+                                                <span class="slds-assistive-text">New Project</span>
+                                                </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title ">
+                        <div class="create-project-header">
+                            <span>Update Project</span>
+                        </div>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+
+                    <lightning-button variant="brand" label="Submit" onclick={handleSubmit}></lightning-button>
+                </div>
+            </header>
+        </div>
+            <div class="card-background">
+
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2 left-col">
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                            <lightning-input type="text" label="Name" required="true"
+                                             onchange={handleName} value={project.Name} variant="label-stacked">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap ">
+                            <lightning-input type="text" label="Description" required="false"
+                                             value={project.Description__c}
+                                             onchange={handleDescription} variant="label-stacked">
+                            </lightning-input>
+                        </div>
+
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 ">
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                            <lightning-input type="date" label="Due Date" required="false" value={project.DueDate__c}
+                                             onchange={handleDueDate} variant="label-stacked">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                            <template if:true={statusValues}>
+                                <lightning-combobox name="progress" label="Status"
+                                                    options={statusValues} onchange={handleStatus}
+                                                    value={project.Status__c}
+                                                    required="false">
+                                </lightning-combobox>
+                            </template>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+    </article>
+</template>
