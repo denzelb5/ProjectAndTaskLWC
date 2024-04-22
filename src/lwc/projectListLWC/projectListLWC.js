@@ -5,9 +5,8 @@
 import { LightningElement, wire, track, api } from 'lwc';
 import getProjects from '@salesforce/apex/ProjectListController.getProjects';
 import deleteProjectRecord from '@salesforce/apex/ProjectListController.deleteProjectRecord';
-import {NavigationMixin} from "lightning/navigation";
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
-import {refreshApex} from "@salesforce/apex";
+import {refreshApex} from '@salesforce/apex';
 
 const actions = [
     { label: 'Show details', name: 'show_details' },
@@ -66,7 +65,7 @@ const COLS = [
     // }
 ]
 
-export default class ProjectListLwc extends NavigationMixin(LightningElement) {
+export default class ProjectListLwc extends LightningElement {
     @track projects = [];
     @track error;
     @track cols = COLS;
@@ -86,7 +85,6 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
     @wire(getProjects)
     wiredProjects(result) {
         this.refreshTable = result;
-        console.log('refreshTable in proj list' + JSON.stringify(this.refreshTable));
         this.viewTaskList = true;
         const { data, error } = result;
         if (data) {
@@ -96,7 +94,6 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
             let description;
             let status;
             this.projects = data.map(row => {
-                // console.log('project row ' + JSON.stringify(row));
                 name1 = row.Name;
                 dueDate = row.DueDate__c;
                 description = row.Description__c;
@@ -107,7 +104,6 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
             this.filteredProjects = this.projects;
             this.error = undefined;
         } else if (error) {
-            console.log('error ' + error);
             this.error = error;
             this.projects = undefined;
         }
@@ -124,7 +120,6 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
 
         // Return the value stored in the field
         let keyValue = (a) => {
-            console.log('a[fieldname]' + a[fieldname]);
             return a[fieldname];
         };
         // checking reverse direction
@@ -140,33 +135,18 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
         this.filteredProjects = parseData;
     }
 
-    // handleRowAction(event) {
-    //     const row = event.detail.row;
-    //     this.record = row;
-    //     this[NavigationMixin.Navigate]({
-    //         type: "standard__recordPage",
-    //         attributes: {
-    //             recordId: row.Id,
-    //             actionName: "view"
-    //         }
-    //     });
-    // }
-
     handleSearch(event) {
         const searchKey = event.target.value.toLowerCase();
         if (searchKey) {
-            console.log('searchKey ' + searchKey);
             this.data = this.projects;
-            console.log('this.data ' + JSON.stringify(this.data));
+
             if (this.data) {
-                console.log('this.data2 ' + JSON.stringify(this.data));
                 let searchRecords = [];
 
                 for (let record of this.data) {
                     let valuesArray = Object.values(record);
 
                     for (let val of valuesArray) {
-                        console.log('val is ' + val);
                         let strVal = String(val);
 
                         if (strVal) {
@@ -179,9 +159,6 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
                     }
                 }
                 this.filteredProjects = searchRecords;
-                console.log('Matched pprs are ' + JSON.stringify(searchRecords));
-                // this.pprs = searchRecords;
-
             }
         } else {
             this.filteredProjects = this.allProjects;
@@ -193,10 +170,14 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
         const row = event.detail.row;
         switch (actionName) {
             case 'delete':
-                console.log('delete row Id ' + row.Id);
-                this.handleDeleteRow(row.Id);
+                if (row.Tasks__r === undefined) {
+                    this.handleDeleteRow(row);
+                } else {
+                    this.handleCannotDelete();
+                }
                 break;
             case 'edit':
+                console.log('edit row ' + JSON.stringify(row));
                 this.handleEditRow(row);
                 break;
             case 'show_details':
@@ -218,16 +199,24 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
         this.dispatchEvent(openNewProjectEvent);
     }
 
-    handleDeleteRow(recordIdToDelete) {
-        deleteProjectRecord({ delRecId: recordIdToDelete })
-            .then(result => {
-                console.log('this.projects ' + JSON.stringify(this.projects));
+    handleCannotDelete() {
+        const noDeleteEvent = new ShowToastEvent({
+            title: 'Delete Unsuccessful',
+            message: 'Projects with tasks associated cannot be deleted without deleting the associated tasks first.',
+            variant: 'error',
+            mode: 'dismissable'
+        });
+        this.dispatchEvent(noDeleteEvent);
+    }
 
+    handleDeleteRow(row) {
+        deleteProjectRecord({ project: row })
+            .then(result => {
                 const evt = new ShowToastEvent({
                     title: 'Success Message',
                     message: 'Record deleted successfully ',
                     variant: 'success',
-                    mode:'dismissible'
+                    mode: 'dismissible'
                 });
                 this.dispatchEvent(evt);
                 return refreshApex(this.refreshTable);
@@ -278,13 +267,7 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
         this.dispatchEvent(closeProjectDetailEvent);
     }
 
-    openUpdateModal() {
-        this.projectListClosed = true;
-        this.viewTaskList = false;
-        this.editModalOpen = true;
-    }
-
-    closeEditModal(){
+    closeEditModal() {
         this.editModalOpen = false;
         this.projectListClosed = false;
         this.viewTaskList = true;
@@ -295,11 +278,5 @@ export default class ProjectListLwc extends NavigationMixin(LightningElement) {
         return refreshApex(this.refreshTable);
 
     }
-
-
-
-
-
-
 
 }

@@ -83,21 +83,15 @@
                                 </div>
                             </h2>
                         </div>
-                        <div class="slds-grid_align-end new-button">
-                            <lightning-button variant="neutral" label="New" title="Primary action"
-                                              onclick={handleNewModal}
-                                              class="slds-grid_align-end ">
-                            </lightning-button>
-                        </div>
 
                     </header>
                 </div>
-            <div class="slds-box slds-theme_default">
+            <div class="slds-box slds-theme_default search-box">
                 <lightning-input
                         label="Search Term"
                         variant="label-hidden"
-                        placeholder="Search by name, description, due date, or status"
-                        type="text"
+                        placeholder="Search"
+                        type="search"
                         value={searchKey}
                         onchange={handleSearch}
                 >

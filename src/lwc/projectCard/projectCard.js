@@ -84,7 +84,6 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
     @wire(getSelectedProject, { projectId: '$recordId' })
     wiredChosenProject({ data, error }) {
         if (data) {
-            console.log('selected Proj ' + JSON.stringify(data));
             this.project = data;
             // this.projectInfo.recordId = this.project.Id;
             this.projectId = this.project.Id;
@@ -92,7 +91,6 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
 
 
         } else if (error) {
-            console.log('sel proj error ' + error);
             this.project = undefined;
             this.error = error;
         }
@@ -108,7 +106,6 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
             let project;
 
             this.tasks = data.map(row => {
-                console.log('task row ' + JSON.stringify(row));
                 name1 = row.Name;
                 dueDate = row.DueDate__c.toString();
                 description = row.Description__c;
@@ -136,7 +133,6 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
 
         // Return the value stored in the field
         let keyValue = (a) => {
-            console.log('a[fieldname]' + a[fieldname]);
             return a[fieldname];
         };
         // checking reverse direction
@@ -155,22 +151,18 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
     handleSearch(event) {
         const searchKey = event.target.value.toLowerCase();
         if (searchKey) {
-            console.log('searchKey ' + searchKey);
             this.data = this.tasks;
-            console.log('this.data ' + JSON.stringify(this.data));
+
             if (this.data) {
-                console.log('this.data2 ' + JSON.stringify(this.data));
                 let searchRecords = [];
 
                 for (let record of this.data) {
                     let valuesArray = Object.values(record);
 
                     for (let val of valuesArray) {
-                        console.log('val is ' + val);
                         let strVal = String(val);
 
                         if (strVal) {
-
                             if (strVal.toLowerCase().includes(searchKey)) {
                                 searchRecords.push(record);
                                 break;
@@ -179,7 +171,6 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
                     }
                 }
                 this.filteredTasks = searchRecords;
-                console.log('Matched tasks are ' + JSON.stringify(searchRecords));
 
             }
         } else {
@@ -187,27 +178,17 @@ export default class ProjectCard extends NavigationMixin(LightningElement) {
         }
     }
 
-    // handleRowAction(event) {
-    //     const row = event.detail.row;
-    //     this.record = row;
-    //     this[NavigationMixin.Navigate]({
-    //         type: "standard__recordPage",
-    //         attributes: {
-    //             recordId: row.Id,
-    //             actionName: "view"
-    //         }
-    //     });
-    // }
-
-    handlePrevious() {
-        this.pageURL = 'https://brave-moose-h79f5u-dev-ed.trailblaze.lightning.force.com/lightning/n/Projects_Page';
-
+    handleRowAction(event) {
+        const row = event.detail.row;
+        this.record = row;
         this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
+            type: "standard__recordPage",
             attributes: {
-                url: this.pageURL,
+                recordId: row.Id,
+                actionName: "view"
             }
         });
     }
+
 
 }

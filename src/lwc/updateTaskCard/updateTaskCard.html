@@ -2,7 +2,7 @@
  - Created by Denise.Baker on 4/18/24.
  -->
 
-<!-- Create Task Card -->
+<!-- Update Task Card -->
 <template>
     <lightning-record-edit-form
             record-id={recordId}
@@ -12,25 +12,24 @@
     >
 
         <article class="slds-card create-card-header">
-            <div class="slds-card__header slds-grid create-box-header">
+            <div class="slds-card__header slds-grid task-box-header">
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
                     <div class="slds-media__figure">
                                                 <span class="slds-icon_container slds-icon-standard-account"
                                                       title="New Task">
                                                     <lightning-icon
                                                             icon-name="standard:work_step"></lightning-icon>
-                                                <span class="slds-assistive-text">New Task</span>
+                                                <span class="slds-assistive-text">Task Information</span>
                                                 </span>
                     </div>
                     <div class="slds-media__body">
                         <h2 class="slds-card__header-title ">
-                            <div class="create-project-header">
-                                <span>New Task</span>
+                            <div class="task-title-header">
+                                <span>Task Information</span>
                             </div>
                         </h2>
                     </div>
                     <div class="slds-no-flex">
-                        <!--                    <lightning-button variant="neutral" label="Submit" onclick={handleSuccess}></lightning-button>-->
                         <lightning-button
                                 class="slds-m-top_small"
                                 variant="neutral"

@@ -4,20 +4,7 @@
     <description>Project List Lwc</description>
     <isExposed>true</isExposed>
     <targets>
-        <target>lightning__RecordPage</target>
         <target>lightning__AppPage</target>
-        <target>lightning__HomePage</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__AppPage">
-            <property
-                    name="viewProjectList"
-                    type="Boolean"
-                    label="Record Id"
-                    description="Hide / show functionality"
-                    default="{!viewProjectList}" />
-
-        </targetConfig>
-    </targetConfigs>
     <masterLabel>Project List Lwc</masterLabel>
 </LightningComponentBundle>

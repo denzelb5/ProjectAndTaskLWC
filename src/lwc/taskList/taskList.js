@@ -62,16 +62,6 @@ const COLS = [
         type: 'action',
         typeAttributes: { rowActions: actions },
     }
-    // {
-    //     label: "View",
-    //     type: "button-icon",
-    //     initialWidth: 75,
-    //     typeAttributes: {
-    //         title: "View Details",
-    //         alternativeText: "View Details",
-    //         iconName: "action:info"
-    //     }
-    // }
 ]
 
 export default class TaskList extends NavigationMixin(LightningElement) {
@@ -102,9 +92,7 @@ export default class TaskList extends NavigationMixin(LightningElement) {
             let project;
 
             this.tasks = data.map(row => {
-                // console.log('task row ' + JSON.stringify(row));
                 name1 = row.Name;
-                // dueDate = row.DueDate__c.toString();
                 dueDate = row.DueDate__c;
                 description = row.Description__c;
                 status = row.Status__c;
@@ -115,7 +103,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
             this.filteredTasks = this.tasks;
             this.error = undefined;
         } else if (error) {
-            console.log('task error ' + error);
             this.error = error;
             this.tasks = undefined;
         }
@@ -132,7 +119,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
 
         // Return the value stored in the field
         let keyValue = (a) => {
-            console.log('a[fieldname]' + a[fieldname]);
             return a[fieldname];
         };
         // checking reverse direction
@@ -151,22 +137,17 @@ export default class TaskList extends NavigationMixin(LightningElement) {
     handleSearch(event) {
         const searchKey = event.target.value.toLowerCase();
         if (searchKey) {
-            console.log('searchKey ' + searchKey);
             this.data = this.tasks;
-            console.log('this.data ' + JSON.stringify(this.data));
+
             if (this.data) {
-                console.log('this.data2 ' + JSON.stringify(this.data));
                 let searchRecords = [];
 
                 for (let record of this.data) {
                     let valuesArray = Object.values(record);
 
                     for (let val of valuesArray) {
-                        console.log('val is ' + val);
                         let strVal = String(val);
-
                         if (strVal) {
-
                             if (strVal.toLowerCase().includes(searchKey)) {
                                 searchRecords.push(record);
                                 break;
@@ -175,8 +156,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
                     }
                 }
                 this.filteredTasks = searchRecords;
-                console.log('Matched tasks are ' + JSON.stringify(searchRecords));
-
             }
         } else {
             this.filteredTasks = this.allTasks;
@@ -188,7 +167,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
         const row = event.detail.row;
         switch (actionName) {
             case 'delete':
-                console.log('delete row Id ' + row.Id);
                 this.handleDeleteRow(row.Id);
                 break;
             case 'edit':
@@ -204,8 +182,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
     handleDeleteRow(recordIdToDelete) {
         deleteTask({ taskId: recordIdToDelete })
             .then(result => {
-                console.log('this.tasks ' + JSON.stringify(this.tasks));
-
                 const evt = new ShowToastEvent({
                     title: 'Success Message',
                     message: 'Record deleted successfully ',
@@ -245,7 +221,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
 
     handleNewModal() {
         this.newModalOpen = true;
-        // this.viewProjectList = false;
         this.taskListClosed = true;
         const openNewProjectEvent = new CustomEvent('opennewmodal', {
             detail: this.newModalOpen
@@ -255,7 +230,6 @@ export default class TaskList extends NavigationMixin(LightningElement) {
 
     closeNewModal(){
         this.newModalOpen = false;
-        // this.viewProjectList = true;
         this.taskListClosed = false;
         const closeNewTaskEvent = new CustomEvent('closenewmodal', {
             detail: this.newModalOpen
@@ -277,6 +251,17 @@ export default class TaskList extends NavigationMixin(LightningElement) {
             detail: this.viewSingleTask
         })
         this.dispatchEvent(closeProjectDetailEvent);
+    }
+
+    closeEditModal(){
+        this.editModalOpen = false;
+        this.taskListClosed = false;
+        const closeNewProjectEvent = new CustomEvent('closenewmodal', {
+            detail: this.editModalOpen
+        })
+        this.dispatchEvent(closeNewProjectEvent);
+        return refreshApex(this.refreshTable);
+
     }
 
 }

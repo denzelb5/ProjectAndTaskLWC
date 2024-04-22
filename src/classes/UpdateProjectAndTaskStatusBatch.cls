@@ -41,7 +41,6 @@ public with sharing class UpdateProjectAndTaskStatusBatch implements Database.Ba
         }
 
         for (String projectId : projectToTaskMap.keySet()) {
-            System.debug('projectToTaskMap.get(id) ' + projectToTaskMap.get(projectId));
             retrievedTasks.addAll(projectToTaskMap.get(projectId));
         }
 
@@ -66,5 +65,14 @@ public with sharing class UpdateProjectAndTaskStatusBatch implements Database.Ba
     }
 
     public void execute(SchedulableContext context) {
+        UpdateProjectAndTaskStatusBatch batch = new UpdateProjectAndTaskStatusBatch();
+        Database.executeBatch(batch, 200);
     }
+
+    // Schedule
+    /*
+    UpdateProjectAndTaskStatusBatch clsAlerts = new UpdateProjectAndTaskStatusBatch();
+    String schAlerts = '0 0 1 * * ?';
+    String jobIdAlerts = System.schedule('UpdateProjectAndTaskStatusBatch', schAlerts, clsAlerts);
+*/
 }

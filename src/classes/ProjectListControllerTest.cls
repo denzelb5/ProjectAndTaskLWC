@@ -51,13 +51,189 @@ private class ProjectListControllerTest {
     }
 
     @IsTest
-    static void descriptiveTestName() {
-        String myObject = 'Account';
-        String searchTerm = 'Name';
-        String filter = 'Name != null';
-        System.assertEquals(0, ProjectListController.search(myObject, searchTerm, filter).size());
-        insert new Account(Name = searchTerm);
-        System.assertEquals(1, ProjectListController.search(myObject, searchTerm, filter).size());
+    static void testGetSingleProject() {
+        Project__c project = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Project__c
+                WHERE Name = 'Project1'
+        ];
+
+        Test.startTest();
+
+        Project__c testProject = ProjectListController.getSelectedProject(project.Id);
+
+        Test.stopTest();
+
+        System.assertEquals(testProject.DueDate__c, project.DueDate__c);
+        System.assertEquals(testProject.Description__c, project.Description__c);
+    }
+
+    @IsTest
+    static void testGetTasksByProjectId() {
+        Project__c project = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Project__c
+                WHERE Name = 'Project1'
+        ];
+
+        List<Task__c> tasks = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name,
+                        Project__c,
+                        Project__r.Name
+                FROM Task__c
+                LIMIT 3
+        ];
+
+        for (Task__c task2 : tasks) {
+            task2.Project__c = project.Id;
+        }
+        update tasks;
+
+        Test.startTest();
+
+        List<Task__c> testTasks = ProjectListController.getTasksByProjectId(project.Id);
+
+        Test.stopTest();
+
+        System.assertEquals(testTasks[0].Project__c, project.Id);
+        System.assertEquals(testTasks[1].Project__c, project.Id);
+        System.assertEquals(testTasks[2].Project__c, project.Id);
+
+    }
+
+    @IsTest
+    static void testCreateAndEditProject() {
+        ProjectListController.ProjectWrapper projectWrapper = new ProjectListController.ProjectWrapper();
+        projectWrapper.name = 'Test Insert';
+        projectWrapper.status = 'new';
+        projectWrapper.description = 'test insert wrapper';
+        projectWrapper.dueDate = System.today();
+
+        Test.startTest();
+
+        ProjectListController.createProjectRecords(projectWrapper);
+
+        Project__c insertedProject = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Project__c
+                WHERE Name = 'Test Insert'
+        ];
+
+
+
+        projectWrapper.recordId = insertedProject.Id;
+        projectWrapper.description = 'test update wrapper';
+        ProjectListController.updateProjectRecords(insertedProject.Id, projectWrapper);
+
+        Test.stopTest();
+
+        Project__c updatedProject = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Project__c
+                WHERE Name = 'Test Insert'
+        ];
+
+        System.assertEquals(insertedProject.Description__c, 'test insert wrapper');
+        System.assertEquals(updatedProject.Description__c, 'test update wrapper');
+    }
+
+    @IsTest
+    static void testDeleteProject() {
+        Project__c project = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Project__c
+                WHERE Name = 'Project1'
+        ];
+
+        Test.startTest();
+
+        ProjectListController.deleteProjectRecord(project.Id);
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testDeleteTask() {
+        Task__c task1 = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Task__c
+                WHERE Name = 'Task1'
+        ];
+
+        Test.startTest();
+
+        ProjectListController.deleteTask(task1.Id);
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testGetSelectedTask() {
+        Task__c task1 = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Task__c
+                WHERE Name = 'Task1'
+        ];
+
+        Task__c task2 = [
+                SELECT
+                        Id,
+                        DueDate__c,
+                        Description__c,
+                        Status__c,
+                        Name
+                FROM Task__c
+                WHERE Name = 'Task2'
+        ];
+
+        Test.startTest();
+
+        Task__c selectedTask = ProjectListController.getSelectedTask(task1.Id);
+
+        Test.stopTest();
+
+        System.assertEquals(selectedTask.Id, task1.Id);
+        System.assertNotEquals(selectedTask.Id, task2.Id);
     }
 
 }

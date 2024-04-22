@@ -4,7 +4,6 @@
 
 import { LightningElement,wire,track,api} from 'lwc';
 import createProjectRecords from '@salesforce/apex/ProjectListController.createProjectRecords';
-import { NavigationMixin } from "lightning/navigation";
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
@@ -13,7 +12,7 @@ import PROJECT_OBJECT from '@salesforce/schema/Project__c';
 import STATUS_FIELD from '@salesforce/schema/Project__c.Status__c';
 
 
-export default class CreateProjectCard extends NavigationMixin(LightningElement) {
+export default class CreateProjectCard extends LightningElement {
     @track name;
     @track description;
     @track dueDate;
@@ -35,7 +34,6 @@ export default class CreateProjectCard extends NavigationMixin(LightningElement)
             console.error('Error fetching picklist values ' + error);
         } else if (data) {
             this.statusValues = [...data.values];
-            console.log('this.statusValues ' + JSON.stringify(this.statusValues));
         }
     }
 

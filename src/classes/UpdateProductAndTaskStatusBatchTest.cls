@@ -57,7 +57,6 @@ private class UpdateProductAndTaskStatusBatchTest {
 
         Test.startTest();
 
-        System.debug('projects ' + projects);
         UpdateProjectAndTaskStatusBatch batch = new UpdateProjectAndTaskStatusBatch();
         Database.executeBatch(batch);
 

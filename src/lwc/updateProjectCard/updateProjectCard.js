@@ -7,13 +7,10 @@ import updateProjectRecords from '@salesforce/apex/ProjectListController.updateP
 import getSelectedProject from '@salesforce/apex/ProjectListController.getSelectedProject';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
-
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 import PROJECT_OBJECT from '@salesforce/schema/Project__c';
-import NAME_FIELD from '@salesforce/schema/Project__c.Name';
-import DESCRIPTION_FIELD from '@salesforce/schema/Project__c.Description__c';
-import DUE_DATE_FIELD from '@salesforce/schema/Project__c.DueDate__c';
 import STATUS_FIELD from '@salesforce/schema/Project__c.Status__c';
+import {refreshApex} from "@salesforce/apex";
 
 export default class UpdateProjectCard extends LightningElement {
 
@@ -27,6 +24,7 @@ export default class UpdateProjectCard extends LightningElement {
     @api recordId;
     @api editModalOpen;
     statusValues = [];
+    refreshProject;
 
 
 
@@ -40,22 +38,24 @@ export default class UpdateProjectCard extends LightningElement {
             console.error('Error fetching picklist values ' + error);
         } else if (data) {
             this.statusValues = [...data.values];
-            // console.log('this.statusValues ' + JSON.stringify(this.statusValues));
         }
     }
 
     // get single record for update
    @wire(getSelectedProject, { projectId: '$recordId'})
-    wiredChosenProject({ data, error }) {
-       console.log('selected Proj ' + JSON.stringify(data));
+    wiredChosenProject(result) {
+       this.refreshProject = result;
+       const { data, error } = result;
         if (data) {
-            console.log('selected Proj ' + JSON.stringify(data));
             this.project = data;
             this.projectInfo.recordId = this.project.Id;
+            this.projectInfo.name = this.project.Name;
+            this.projectInfo.description = this.project.Description__c;
+            this.projectInfo.dueDate = this.project.DueDate__c;
+            this.projectInfo.status = this.project.Status__c;
             this.projectId = this.project.Id;
             this.error = undefined;
         } else if (error) {
-            console.log('sel proj error ' + error);
             this.project = undefined;
             this.error = error;
         }
@@ -78,10 +78,8 @@ export default class UpdateProjectCard extends LightningElement {
     }
 
     handleSubmit(event) {
-        console.log('event.target ' + event.target);
         updateProjectRecords({ projectId: this.projectId,  projectInfo: this.projectInfo })
             .then((result) => {
-                console.log('update result ' + JSON.stringify(result));
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
@@ -91,6 +89,7 @@ export default class UpdateProjectCard extends LightningElement {
                 );
             });
         this.editModalOpen = false;
+        return refreshApex(this.refreshProject);
     }
 
 }

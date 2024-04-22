@@ -30,7 +30,7 @@ public with sharing class DML_Helper {
                 }
             }
         } catch (Exception ex) {
-            System.debug('Exception DML Helper ' + ex.getMessage());
+            System.debug('Exception DML Helper ' + ex.getMessage() + '' + ex.getLineNumber());
         }
         insertAuditLogs(auditLogsToInsert);
     }
@@ -54,7 +54,7 @@ public with sharing class DML_Helper {
                 }
             }
         } catch (Exception ex) {
-            System.debug('Exception DML Helper ' + ex.getMessage());
+            System.debug('Exception DML Helper ' + ex.getMessage() + '' + ex.getLineNumber());
         }
         insertAuditLogs(auditLogsToInsert);
     }
@@ -76,7 +76,7 @@ public with sharing class DML_Helper {
                 }
             }
         } catch (Exception ex) {
-            System.debug('Exception:' + ex.getMessage());
+            System.debug('Exception:' + ex.getMessage() + '' + ex.getLineNumber());
         }
         insertAuditLogs(auditLogsToInsert);
     }
@@ -99,7 +99,7 @@ public with sharing class DML_Helper {
                 }
             }
         } catch (Exception ex) {
-            System.debug('Exception:' + ex.getMessage());
+            System.debug('Exception:' + ex.getMessage() + '' + ex.getLineNumber());
 
         }
         insertAuditLogs(auditLogsToInsert);
@@ -107,8 +107,6 @@ public with sharing class DML_Helper {
 
     // Helper method to create Audit Log records when a DML operation is performed
     private static AuditLog__c assignToAuditLog(String action, String objectName, String recordId) {
-        System.debug('objectName ' + objectName);
-        System.debug('recordid ' + recordId);
         AuditLog__c log = new AuditLog__c();
         log.Action__c = action;
         log.Date__c = Datetime.now();
@@ -121,12 +119,11 @@ public with sharing class DML_Helper {
 
     // Helper method to insert audit logs
     private static void insertAuditLogs(List<AuditLog__c> logsToInsert) {
-        System.debug('logsToInsert ' + logsToInsert);
         if (logsToInsert.size() > 0) {
             try {
                 List<Database.SaveResult> srList = Database.insert(logsToInsert, false);
             } catch(Exception e) {
-                System.debug('Audit Log Insert Exception: ' + e.getMessage());
+                System.debug('Audit Log Insert Exception: ' + e.getMessage() + '' + e.getLineNumber());
             }
         }
     }

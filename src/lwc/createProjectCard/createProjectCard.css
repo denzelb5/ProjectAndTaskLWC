@@ -4,3 +4,8 @@
 .left-col {
     padding-left: -.25em;
 }
+
+.create-box-header {
+    background-color: #F6F6F6;
+    padding-bottom: 1em;
+}
